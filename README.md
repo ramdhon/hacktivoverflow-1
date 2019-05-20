@@ -93,8 +93,8 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
             "created": "<createdAt>",
             "updated": "<updatedAt>",
             "tags": "[<tagObjectId-populated>]",
-            "upvotes": "[<userObjectId-populated>]",
-            "downvotes": "[<userObjectId-populated>]",
+            "upvotes": "[<userObjectId>]",
+            "downvotes": "[<userObjectId>]",
             "creator": "<userObjectId-populated>"
           }, 
           {
@@ -131,8 +131,8 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
             "created": "<createdAt>",
             "updated": "<updatedAt>",
             "tags": "[<tagObjectId-populated>]",
-            "upvotes": "[<userObjectId-populated>]",
-            "downvotes": "[<userObjectId-populated>]",
+            "upvotes": "[<userObjectId>]",
+            "downvotes": "[<userObjectId>]",
             "creator": "<userObjectId-populated>"
           },
           {
@@ -183,8 +183,8 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
           "created": "<createdAt>",
           "updated": "<updatedAt>",
           "tags": "[<tagObjectId-populated>]",
-          "upvotes": "[<userObjectId-populated>]",
-          "downvotes": "[<userObjectId-populated>]",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
           "creator": "<userObjectId-populated>"
         },
       }
@@ -218,8 +218,8 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
           "created": "<createdAt>",
           "updated": "<updatedAt>",
           "tags": "[<tagObjectId-populated>]",
-          "upvotes": "[<userObjectId-populated>]",
-          "downvotes": "[<userObjectId-populated>]",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
           "creator": "<userObjectId-populated>"
         },
       }
@@ -259,8 +259,8 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
           "created": "<createdAt>",
           "updated": "<updatedAt>",
           "tags": "[<tagObjectId-populated>]",
-          "upvotes": "[<userObjectId-populated>]",
-          "downvotes": "[<userObjectId-populated>]",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
           "creator": "<userObjectId-populated>"
         },
         "info": "<info-optional>"
@@ -311,8 +311,8 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
           "created": "<createdAt>",
           "updated": "<updatedAt>",
           "tags": "[<tagObjectId-populated>]",
-          "upvotes": "[<userObjectId-populated>]",
-          "downvotes": "[<userObjectId-populated>]",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
           "creator": "<userObjectId-populated>"
         },
       }

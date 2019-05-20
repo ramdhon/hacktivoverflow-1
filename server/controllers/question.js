@@ -17,6 +17,10 @@ class Controller {
         path: 'creator',
         select: ['_id', 'name', 'email']
       })
+      .populate({
+        path: 'tags',
+        select: ['_id', 'title']
+      })
       .then(questions => {
         if (questions.length === 0) {
           const err = {
@@ -53,6 +57,10 @@ class Controller {
         path: 'creator',
         select: ['_id', 'name', 'email']
       })
+      .populate({
+        path: 'tags',
+        select: ['_id', 'title']
+      })
       .then(questions => {
         if (questions.length === 0) {
           const err = {
@@ -73,7 +81,6 @@ class Controller {
     const { title, description } = req.body;
     const { tags, decoded } = req;
 
-    console.log(tags);
     Question.create({
       title, description,
       creator: decoded.id,
@@ -97,6 +104,10 @@ class Controller {
       .populate({
         path: 'creator',
         select: ['_id', 'name', 'email']
+      })
+      .populate({
+        path: 'tags',
+        select: ['_id', 'title']
       })
       .then(question => {
         if (!question) {
