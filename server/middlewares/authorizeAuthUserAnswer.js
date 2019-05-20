@@ -1,34 +1,34 @@
-const Question = require('../models/question');
+const Answer = require('../models/answer');
 
 module.exports = (req, res, next) => {
   const { decoded } = req;
   const { id } = req.params;
 
-  Question.findById(id)
+  Answer.findById(id)
     .populate({
       path: 'creator',
       select: ['_id', 'name', 'email']
     })
     .populate({
-      path: 'tags',
-      select: ['_id', 'title']
+      path: 'questionId',
+      select: ['_id', 'title', 'description']
     })
-    .then(question => {
-      if (!question) {
+    .then(answer => {
+      if (!answer) {
         const err = {
           status: 404,
           message: 'data not found'
         }
         next(err);
       } else {
-        if (question.creator._id != decoded.id) {
+        if (answer.creator._id != decoded.id) {
           const err = {
             status: 401,
             message: 'unauthorized to access'
           }
           next(err);
         } else {
-          req.question = question;
+          req.answer = answer;
           next();
         }
       }

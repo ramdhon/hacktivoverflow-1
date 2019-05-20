@@ -29,7 +29,7 @@ const answerSchema = new Schema({
 })
 
 answerSchema.post('save', function(doc, next) {
-  Question
+  Answer
     .findOne({
       _id: doc._id
     })
@@ -51,7 +51,7 @@ answerSchema.post('save', function(doc, next) {
     })
 })
 
-let Question = mongoose.model('Question', answerSchema);
+let Answer = mongoose.model('Answer', answerSchema);
 
 
-module.exports = Question;
+module.exports = Answer;
