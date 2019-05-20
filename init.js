@@ -1,0 +1,9 @@
+NODE_ENV=development
+PORT=3000
+const DATABASE = /** */
+GOOGLE_CLIENT_ID=721214027769-9nkf9lnt121m8bqne51rmn56klrj14nm.apps.googleusercontent.com
+SECRET=hackTiv8
+CLOUD_BUCKET=general_ramdhon
+GCLOUD_PROJECT=general-238215
+KEYFILE_PATH=./apikey.json
+MONGOOSE_CONNECTION=mongodb://localhost/${DATABASE}
