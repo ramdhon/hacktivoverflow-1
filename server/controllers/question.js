@@ -70,18 +70,16 @@ class Controller {
   }
   
   static create(req, res, next) {
-    const { title, text } = req.body
-    const { decoded } = req;
-    let imageURL = null;
-    
-    if (req.file) {
-      imageURL = req.file.cloudStoragePublicUrl;
-    }
+    const { title, description } = req.body;
+    const { tags, decoded } = req;
+
+    console.log(tags);
     Question.create({
-      title, text,
-      imageURL: imageURL || './assets/noPhoto.png',
-      status: 0,
+      title, description,
       creator: decoded.id,
+      tags: tags || [],
+      upvotes: [],
+      downvotes: [],
       created: new Date(),
       updated: new Date()
     })
@@ -117,20 +115,30 @@ class Controller {
   }
 
   static updatePut(req, res, next) {
-    const { title, text, status } = req.body
-    let updatedQuestion = req.question;
-    let imageURL = null;
-    
-    if (req.file) {
-      imageURL = req.file.cloudStoragePublicUrl;
+    const { title, description, upvotes, downvotes } = req.body;
+    const { tags, question } = req;
+    let updatedQuestion = question;
+
+    if (!title) {
+      const err = {
+        status: 400,
+        message: 'Question validation failed: title: required'
+      }
+      return next(err);
     }
+
     updatedQuestion.title = title;
-    updatedQuestion.text = text;
-    updatedQuestion.imageURL = imageURL;
-    updatedQuestion.status = status;
+    updatedQuestion.description = description;
+    updatedQuestion.tags = tags;
+    updatedQuestion.upvotes = upvotes || [];
+    updatedQuestion.downvotes = downvotes || [];
     updatedQuestion.updated = new Date();
     updatedQuestion.updateOne({
-      title, text, status, imageURL, updated: updatedQuestion.updated
+      title, description,
+      tags: updatedQuestion.tags,
+      upvotes: updatedQuestion.upvotes,
+      downvotes: updatedQuestion.downvotes,
+      updated: updatedQuestion.updated
     })
       .then(info => {
         res.status(201).json({ message: 'data updated', updatedQuestion, info });
@@ -141,17 +149,14 @@ class Controller {
   }
 
   static updatePatch(req, res, next) {
-    const { title, text, status } = req.body
-    let { question } = req;
-    let imageURL = null;
-    
-    if (req.file) {
-      imageURL = req.file.cloudStoragePublicUrl;
-    }
+    const { title, description, upvotes, downvotes } = req.body;
+    let { tags, question } = req;
+
     question.title = title || question.title;
-    question.text = text || question.text;
-    question.imageURL = imageURL || question.imageURL;
-    question.status = status || question.status;
+    question.description = description || question.description;
+    question.tags = tags.length ? tags : question.tags;
+    question.upvotes = upvotes || question.upvotes;
+    question.downvotes = downvotes || question.downvotes;
     question.updated = new Date();
     question.save()
       .then(updatedQuestion => {
@@ -164,6 +169,7 @@ class Controller {
 
   static delete(req, res, next) {
     let { question } = req;
+
     question.delete()
       .then(deletedQuestion => {
         res.status(200).json({ message: 'data deleted', deletedQuestion });

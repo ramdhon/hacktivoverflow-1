@@ -7,11 +7,21 @@ const questionSchema = new Schema({
     type: String,
     required: [true, 'required']
   },
-  text: String,
-  status: Number,
-  imageURL: String,
+  description: String,
   created: Date,
   updated: Date,
+  tags: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Tag'
+  }],
+  upvotes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  downvotes: [{
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }],
   creator: {
     type: Schema.Types.ObjectId,
     ref: 'User'
@@ -21,19 +31,24 @@ const questionSchema = new Schema({
 questionSchema.post('save', function(doc, next) {
   Question
     .findOne({
-      creator: doc.creator
+      _id: doc._id
     })
     .populate({
       path: 'creator',
       select: ['_id', 'name', 'email']
     })
+    .populate({
+      path: 'tags',
+      select: ['_id', 'title']
+    })
     .then(question => {
-        doc.creator = question.creator;
-        next();
-      })
-      .catch(err => {
-        next(err);
-      })
+      doc.creator = question.creator;
+      doc.tags = question.tags;
+      next();
+    })
+    .catch(err => {
+      next(err);
+    })
 })
 
 let Question = mongoose.model('Question', questionSchema);
