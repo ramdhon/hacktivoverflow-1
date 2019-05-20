@@ -43,7 +43,7 @@ answerSchema.post('save', function(doc, next) {
     })
     .then(question => {
       doc.creator = question.creator;
-      doc.question = question.question;
+      doc.questionId = question.questionId;
       next();
     })
     .catch(err => {

@@ -371,3 +371,271 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
           "message": "data empty"
         }
       ```
+
+### ANSWERS
+
+- **GET LIST OF ANSWERS**
+  - URL:
+    - **`GET`** *`<SERVER_URL>/answers`*
+  - URL (filtered):
+    - **`GET`** *`<SERVER_URL>/answers?search=<KEYWORD>`*
+  - Expected response (status: `200`):
+    ```json
+      {
+        "message": "data found",
+        "answers": [
+          {
+            "_id": "<id>",
+            "title": "<title>",
+            "description": "<description>",
+            "created": "<createdAt>",
+            "updated": "<updatedAt>",
+            "upvotes": "[<userObjectId>]",
+            "downvotes": "[<userObjectId>]",
+            "questionId": "<questionObjectId-populated>",
+            "creator": "<userObjectId-populated>"
+          }, 
+          {
+            "..."
+          }, 
+          "..."
+        ]
+      }
+    ```
+  - Error responses:
+    - status: `404`:
+      ```json
+        {
+          "message": "data empty"
+        }
+      ```
+
+- **GET LIST OF AUTH USER'S ANSWERS**
+  - URL:
+    - **`GET`** *`<SERVER_URL>/user/answers`*
+  - URL (filtered):
+    - **`GET`** *`<SERVER_URL>/user/answers?search=<KEYWORD>`*
+  - Header(s):
+    - `token`: `String`
+  - Expected response (status: `200`):
+    ```json
+      {
+        "message": "data found",
+        "questions": [
+          {
+            "_id": "<id>",
+            "title": "<title>",
+            "description": "<description>",
+            "created": "<createdAt>",
+            "updated": "<updatedAt>",
+            "upvotes": "[<userObjectId>]",
+            "downvotes": "[<userObjectId>]",
+            "questionId": "<questionObjectId-populated>",
+            "creator": "<userObjectId-populated>"
+          },
+          {
+            "..."
+          }, 
+          "..."
+        ]
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+        {
+          "message": "<authentication message>"
+        }
+      ```
+      Notes:
+      <br>Messages:
+      - no token assigned
+      - not allowed to access
+      - not recognized input data
+
+    - status: `404`:
+      ```json
+        {
+          "message": "data empty"
+        }
+      ```
+  
+- **CREATE NEW ANSWER**
+  - URL:
+    - **`POST`** *`<SERVER_URL>/answers`*
+  - Header(s):
+    - `token`: `String`
+  - Body:
+    - `title`: `String`, required
+    - `description`: `String`
+    - `questionId`: `ObjectId`
+  - Expected response (status: `201`):
+    ```json
+      {
+        "message": "data created",
+        "newAnswer":
+        {
+          "_id": "<id>",
+          "title": "<title>",
+          "description": "<description>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
+          "questionId": "<questionObjectId-populated>",
+          "creator": "<userObjectId-populated>"
+        },
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+      {
+        "message": "<authentication message>"
+      }
+      ```
+      Notes:
+      - Messages:
+        - no token assigned
+        - not allowed to access
+        - not recognized input data
+      - ERROR `400` is also Validation Error caused by entering *empty title*
+    
+- **GET ANSWER BY ID**
+  - URL:
+    - **`GET`** *`<SERVER_URL>/answers/:id`*
+  - Expected response (status: `200`):
+    ```json
+      {
+        "message": "data found",
+        "answer": 
+        {
+          "_id": "<id>",
+          "title": "<title>",
+          "description": "<description>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
+          "questionId": "<questionObjectId-populated>",
+          "creator": "<userObjectId-populated>"
+        },
+      }
+    ```
+  - Error responses:
+    - status: `404`:
+      ```json
+        {
+          "message": "data not found"
+        }
+      ```
+
+- **UPDATE ANSWER BY ID**
+  - Notes:
+    - Authorization: only authenticated user's article can be accessed
+  - URL(s):
+    - **`PUT`** *`<SERVER_URL>/answers/:id`*
+    - **`PATCH`** *`<SERVER_URL>/answers/:id`*
+    <br>Notes:
+        - `PUT` method is used for updating all details of data
+        - `PATCH` method is used for updating some details of data
+  - Header(s):
+    - `token`: `String`
+  - Body:
+    - `title`: `String`, required
+    - `description`: `String`
+    - `questionId`: `ObjectId`
+  - Expected response (status: `201`):
+    ```json
+      {
+        "message": "data updated",
+        "updatedAnswer":
+        {
+          "_id": "<id>",
+          "title": "<title>",
+          "description": "<description>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
+          "questionId": "<questionObjectId-populated>",
+          "creator": "<userObjectId-populated>"
+        },
+        "info": "<info-optional>"
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+      {
+        "message": "<authentication message>"
+      }
+      ```
+      Notes:
+      - Messages:
+        - no token assigned
+        - not allowed to access
+        - not recognized input data
+      - ERROR `400` is also Validation Error caused by entering *empty title*
+    - status: `401`:
+      ```json
+      {
+        "message": "unauthorized to access"
+      }
+      ```
+    - status: `404`:
+      ```json
+        {
+          "message": "data not found"
+        }
+      ```
+
+- **DELETE ANSWER BY ID**
+  - Notes:
+    - Authorization: only authenticated user's article can be accessed
+  - URL(s):
+    - **`DELETE`** *`<SERVER_URL>/answers/:id`*
+  - Header(s):
+    - `token`: `String`
+  - Expected response (status: `200`):
+    ```json
+      {
+        "message": "data deleted",
+        "deletedAnswer":
+        {
+          "_id": "<id>",
+          "title": "<title>",
+          "description": "<description>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
+          "questionId": "<questionObjectId-populated>",
+          "creator": "<userObjectId-populated>"
+        },
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+      {
+        "message": "<authentication message>"
+      }
+      ```
+      Notes:
+      - Messages:
+        - no token assigned
+        - not allowed to access
+        - not recognized input data
+    - status: `401`:
+      ```json
+      {
+        "message": "unauthorized to access"
+      }
+      ```
+    - status: `404`:
+      ```json
+        {
+          "message": "data not found"
+        }
+      ```

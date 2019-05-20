@@ -129,8 +129,8 @@ class Controller {
       created: new Date(),
       updated: new Date()
     })
-      .then(newQuestion => {
-        res.status(201).json({ message: 'data created', newQuestion });
+      .then(newAnswer => {
+        res.status(201).json({ message: 'data created', newAnswer });
       })
       .catch(err => {
         next(err);
