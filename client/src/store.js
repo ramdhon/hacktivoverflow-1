@@ -81,6 +81,29 @@ export default new Vuex.Store({
       axios
         .post('/register', payload)
         .then(({ data }) => {
+          context.commit('loading', false);
+          const { message } = data;
+
+          this.dispatch('notify', {
+            message, type: 'success',
+          });
+        })
+        .catch((err) => {
+          const { message } = err.response.data;
+
+          this.dispatch('notify', {
+            message, type: 'error',
+          });
+        });
+    },
+    upload(context, payload) {
+      const { formData, token } = payload;
+
+      context.commit('loading', true);
+      axios
+        .post('/questions', formData, { headers: { token } })
+        .then(({ data }) => {
+          context.commit('loading', false);
           const { message } = data;
 
           this.dispatch('notify', {

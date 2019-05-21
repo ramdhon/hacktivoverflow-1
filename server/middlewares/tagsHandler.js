@@ -9,8 +9,8 @@ module.exports = {
     
     if (!tags) {
       tags = [];
-    } else if (typeof tags === 'string') {
-
+    } else if (typeof tags !== 'object') {
+      tags = [ tags ];
     }
 
     for (let tag of tags) {

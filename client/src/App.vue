@@ -1,9 +1,14 @@
 <template>
   <v-app>
     <HeadBar/>
-    <v-progress-linear v-show="false" color="orange" :indeterminate="true"></v-progress-linear>
+    <v-progress-linear
+      v-show="loading"
+      color="orange"
+      :indeterminate="true"
+    ></v-progress-linear>
     <div>
       <v-alert
+        style="width:100%;position:absolute;z-index:1"
         transition="slide-y-reverse-transition"
         :value="notification.status"
         :type="notification.type"
@@ -29,6 +34,7 @@ export default {
   },
   computed: {
     ...mapState([
+      'loading',
       'notification',
     ]),
   },

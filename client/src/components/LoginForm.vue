@@ -5,7 +5,7 @@
         <h1 class="display-1">Login</h1>
       </v-card-title>
       <v-card-text>
-        <v-form @submit.prevent="login" v-model="loginForm.valid">
+        <v-form ref="loginForm" @submit.prevent="login" v-model="loginForm.valid">
           <v-text-field
             color="orange"
             v-model="loginForm.email"
@@ -52,8 +52,7 @@ export default {
   },
   methods: {
     resetForm() {
-      this.loginForm.email = '';
-      this.loginForm.password = '';
+      this.$refs.loginForm.reset();
     },
     login() {
       const { email, password } = this.loginForm;

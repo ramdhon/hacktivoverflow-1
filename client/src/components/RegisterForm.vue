@@ -5,7 +5,7 @@
         <h1 class="display-1">Register</h1>
       </v-card-title>
       <v-card-text>
-        <v-form @submit.prevent="register" v-model="registerForm.valid">
+        <v-form ref="registerForm" @submit.prevent="register" v-model="registerForm.valid">
           <v-text-field
             color="orange"
             v-model="registerForm.name"
@@ -67,9 +67,7 @@ export default {
   },
   methods: {
     resetForm() {
-      this.registerForm.name = '';
-      this.registerForm.email = '';
-      this.registerForm.password = '';
+      this.$refs.registerForm.reset();
     },
     register() {
       const { name, email, password } = this.registerForm;

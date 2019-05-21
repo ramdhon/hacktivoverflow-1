@@ -7,6 +7,7 @@ const login = require('./login');
 const user = require('./user');
 const questions = require('./questions');
 const answers = require('./answers');
+const tags = require('./tags');
 
 router.get('/', (req, res, next) => {
   res.status(200).json({ message: 'Welcome to Hackoverflow API :)' })
@@ -19,6 +20,8 @@ router.use('/login', login);
 router.use('/user', user);
 router.use('/questions', questions);
 router.use('/answers', answers);
+
+router.use('/tags', tags);
 
 
 module.exports = router;
