@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app style="background:white;">
     <HeadBar/>
     <v-progress-linear
       v-show="loading"

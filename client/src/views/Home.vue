@@ -1,9 +1,7 @@
 <template>
-  <v-container class="pt-5" fluid>
+  <v-container class="pt-5">
     <v-layout row>
-      <v-flex class="pa-4" sm1>
-      </v-flex>
-      <v-flex class="pa-4" sm8>
+      <v-flex class="pa-4" sm9>
         <v-slide-y-transition>
           <v-layout justify-center v-show="questionForm" row>
             <v-flex sm11>
@@ -17,16 +15,51 @@
           </v-layout>
         </v-slide-y-transition>
         <v-layout justify-end row>
-          <v-btn @click="openForm" color="orange"><v-icon>create</v-icon>&ensp;Question?</v-btn>
+          <v-btn @click="openForm" color="orange" dark><v-icon>create</v-icon>&ensp;Question?</v-btn>
         </v-layout>
         <v-layout row>
           <v-flex>
             <v-list three-line>
               <div v-for="(question, index) in questions" :key="index">
                 <v-list-tile @click="test" ripple>
-                  <v-list-content>
-                    <h1 class="title">{{ question.title }}</h1>
-                  </v-list-content>
+                    <v-layout row>
+                      <v-flex sm2>
+                        <v-layout row>
+                          <v-flex sm6>
+                            <v-layout row justify-center>
+                              <h1 class="display-1 grey--text">
+                                0
+                              </h1>
+                            </v-layout>
+                            <v-layout row justify-center>
+                              <span class="caption">votes</span>
+                            </v-layout>
+                          </v-flex>
+                          <v-flex sm6>
+                            <v-layout row justify-center>
+                              <h1 class="display-1 grey--text">
+                                0
+                              </h1>
+                            </v-layout>
+                            <v-layout row justify-center>
+                              <span class="caption">answers</span>
+                            </v-layout>
+                          </v-flex>
+                        </v-layout>
+                      </v-flex>
+                      <v-flex class="px-3" sm8>
+                        <p class="text-truncate title ">{{ question.title }}</p>
+                        <v-layout row wrap>
+                          <v-chip small label color="orange" text-color="white">
+                            <v-icon left>label</v-icon>Tags
+                          </v-chip>
+                          <v-chip small v-for="(tag, index) in tags" :key="index">{{ tag }}</v-chip>
+                        </v-layout>
+                      </v-flex>
+                      <v-flex sm2>
+                        
+                      </v-flex>
+                    </v-layout>
                 </v-list-tile>
                 <v-divider></v-divider>
               </div>
@@ -61,26 +94,7 @@ export default {
   data() {
     return {
       questionForm: false,
-      items: [
-        { header: 'Today' },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: "<span class='text--primary'>Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: "<span class='text--primary'>to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.",
-        },
-        { divider: true, inset: true },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: "<span class='text--primary'>Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?",
-        },
-      ],
+      tags: ['lorem', 'ipsum', 'dolon', 'ist'],
     };
   },
   methods: {
