@@ -38,5 +38,17 @@ export default {
       'notification',
     ]),
   },
+  created() {
+    this.checkLog();
+  },
+  methods: {
+    checkLog() {
+      if (!localStorage.token) {
+        this.$store.commit('setIsLogin', false);
+      } else {
+        this.$store.commit('setIsLogin', true);
+      }
+    },
+  },
 };
 </script>

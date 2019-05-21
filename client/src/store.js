@@ -14,6 +14,17 @@ export default new Vuex.Store({
     },
     search: '',
     isLogin: false,
+    questions: [
+      {
+        title: 'Apa lorem ipsum',
+      },
+      {
+        title: 'Bagaimana lorem ipsum',
+      },
+      {
+        title: 'Kapan lorem ipsum',
+      },
+    ],
   },
   mutations: {
     notify(state, payload) {
@@ -48,6 +59,10 @@ export default new Vuex.Store({
       state.isLogin = true;
       localStorage.setItem('token', token);
     },
+    setIsLogin(state, payload) {
+      // eslint-disable-next-line
+      state.isLogin = payload;
+    },
   },
   actions: {
     notify(context, payload) {
@@ -69,6 +84,7 @@ export default new Vuex.Store({
           context.commit('login', data);
         })
         .catch((err) => {
+          context.commit('loading', false);
           const { message } = err.response.data;
 
           this.dispatch('notify', {
@@ -89,6 +105,7 @@ export default new Vuex.Store({
           });
         })
         .catch((err) => {
+          context.commit('loading', false);
           const { message } = err.response.data;
 
           this.dispatch('notify', {
@@ -111,6 +128,7 @@ export default new Vuex.Store({
           });
         })
         .catch((err) => {
+          context.commit('loading', false);
           const { message } = err.response.data;
 
           this.dispatch('notify', {
