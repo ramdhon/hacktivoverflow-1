@@ -25,11 +25,16 @@
 
 <script>
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+import { mapState } from 'vuex';
 export default {
   name: 'answerForm',
   components: {
     // ckeditor: CKEditor.component,
+  },
+  computed: {
+    ...mapState([
+      'isLogin',
+    ]),
   },
   data() {
     return {
@@ -54,16 +59,22 @@ export default {
       this.answerForm.description = '';
     },
     upload() {
-      const { title, description } = this.answerForm;
-      const { id } = this.$route.params;
-      const formData = {
-        title,
-        description,
-        questionId: id,
-      };
-
-      this.$emit('upload', formData);
-      this.resetForm();
+      if (!this.isLogin) {
+        this.$store.dispatch('notify', {
+          message: 'you must login first to answer the question',
+          type: 'warning',
+        })
+      } else {
+        const { title, description } = this.answerForm;
+        const { id } = this.$route.params;
+        const formData = {
+          title,
+          description,
+          questionId: id,
+        };
+        this.$emit('upload', formData);
+        this.resetForm();
+      }
     },
   },
 };

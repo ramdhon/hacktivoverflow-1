@@ -77,7 +77,6 @@ export default {
           this.answers.unshift(newAnswer);
         })
         .catch((err) => {
-          console.log(err);
           this.$store.commit('loading', false);
           const { message } = err.response.data;
 
