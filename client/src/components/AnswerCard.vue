@@ -19,7 +19,7 @@
       <v-layout row>
         <v-flex sm1>
           <v-layout justify-center row>
-            <v-btn @click="up" flat icon :color="isUp ? 'orange' : ''">
+            <v-btn @click="up" flat icon :color="isUp&&isLogin ? 'orange' : ''">
               <v-icon>thumb_up</v-icon>
             </v-btn>
           </v-layout>
@@ -27,7 +27,7 @@
             <h1 class="title">{{ totalVotes }}</h1>
           </v-layout>
           <v-layout justify-center row>
-            <v-btn @click="down" flat icon :color="isDown ? 'orange' : ''">
+            <v-btn @click="down" flat icon :color="isDown&&isLogin ? 'orange' : ''">
               <v-icon>thumb_down</v-icon>
             </v-btn>
           </v-layout>
@@ -49,6 +49,7 @@ export default {
   computed: {
     ...mapState([
       'user',
+      'isLogin',
     ]),
     totalVotes() {
       if (!this.answer) {
@@ -84,37 +85,37 @@ export default {
   },
   watch: {
     isUp() {
-      if (this.isUp) {
+      if (this.isUp && this.user) {
         if (!this.answer.upvotes.find(id => id === this.user.id)) {
           this.answer.upvotes.push(this.user.id);
         }
       } else {
         this.answer.upvotes = this.answer.upvotes.filter(id => id !== this.user.id);
       }
-      // this.updateVote();
-      // console.log('dari isUp');
     },
     isDown() {
-      if (this.isDown) {
+      if (this.isDown && this.user) {
         if (!this.answer.downvotes.find(id => id === this.user.id)) {
           this.answer.downvotes.push(this.user.id);
-          this.updateVote();
         }
       } else {
         this.answer.downvotes = this.answer.downvotes.filter(id => id !== this.user.id);
-        this.updateVote();
       }
-      // console.log('dari isDown');
     },
     // eslint-disable-next-line
     'answer._id'() {
-      if (this.answer) {
+      if (this.answer && this.user) {
+        this.checkVote();
+      }
+    },
+    isLogin() {
+      if (this.answer && this.user) {
         this.checkVote();
       }
     },
   },
   mounted() {
-    if (this.answer) {
+    if (this.answer && this.user) {
       this.checkVote();
     }
   },
@@ -143,6 +144,7 @@ export default {
       } else {
         this.isUp = false;
       }
+      this.upvote();
     },
     down() {
       if (!this.isDown) {
@@ -151,31 +153,64 @@ export default {
       } else {
         this.isDown = false;
       }
+      this.downvote();
     },
-    updateVote() {
+    upvote() {
       // eslint-disable-next-line
       const id = this.answer._id;
       const { token } = localStorage;
+
       axios
         // eslint-disable-next-line
-        .patch(`/answers/${id}`, {
-          upvotes: this.answer.upvotes,
-          downvotes: this.answer.downvotes,
-        }, {
-          headers: { token },
-        })
+        .patch(`/answers/${id}?upvote=${Number(this.isUp)}`, {}, { headers: { token } })
+        // eslint-disable-next-line
         .then(({ data }) => {
-          const { updatedQuestion } = data;
-
-          this.answer = updatedQuestion;
+          // eslint-disable-next-line
+          //...          
         })
         .catch((err) => {
-          const { message } = err.response.data;
+          let message = null;
+          if (err.response) {
+          // eslint-disable-next-line
+            message = err.response.data.message;
+          } else {
+            message = 'internal server error';
+          }
 
           this.$store.dispatch('notify', {
-            message, type: 'error',
+            message,
+            type: 'error',
           });
-          this.isUp = false;
+          this.isUp = !this.isUp;
+        });
+    },
+    downvote() {
+      // eslint-disable-next-line
+      const id = this.answer._id;
+      const { token } = localStorage;
+
+      axios
+        // eslint-disable-next-line
+        .patch(`/answers/${id}?downvote=${Number(this.isDown)}`, {}, { headers: { token } })
+        // eslint-disable-next-line
+        .then(({ data }) => {
+          // eslint-disable-next-line
+          //...          
+        })
+        .catch((err) => {
+          let message = null;
+          if (err.response) {
+          // eslint-disable-next-line
+            message = err.response.data.message;
+          } else {
+            message = 'internal server error';
+          }
+
+          this.$store.dispatch('notify', {
+            message,
+            type: 'error',
+          });
+          this.isDown = !this.isDown;
         });
     },
   },

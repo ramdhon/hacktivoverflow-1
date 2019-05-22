@@ -203,6 +203,8 @@ class Controller {
 
     answer.upvotes = (upvote == 1 && !answer.upvotes.find(id => id == decoded.id)) ? [...answer.upvotes, decoded.id] : upvote == 0 ? answer.upvotes.filter(id => id != decoded.id) : answer.upvotes;
     answer.downvotes = (downvote == 1 && !answer.downvotes.find(id => id == decoded.id)) ? [...answer.downvotes, decoded.id] : downvote == 0 ? answer.downvotes.filter(id => id != decoded.id) : answer.downvotes;
+    answer.upvotes = downvote == 1 ? answer.upvotes.filter(id => id != decoded.id) : answer.upvotes;
+    answer.downvotes = upvote == 1 ? answer.downvotes.filter(id => id != decoded.id) : answer.downvotes;
     answer.title = title || answer.title;
     answer.description = description || answer.description;
     answer.updated = new Date();

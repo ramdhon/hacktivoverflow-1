@@ -22,7 +22,7 @@
       <v-layout row>
         <v-flex sm1>
           <v-layout justify-center row>
-            <v-btn @click="up" flat icon :color="isUp ? 'orange' : ''">
+            <v-btn @click="up" flat icon :color="isUp&&isLogin ? 'orange' : ''">
               <v-icon>thumb_up</v-icon>
             </v-btn>
           </v-layout>
@@ -30,7 +30,7 @@
             <h1 class="title">{{ totalVotes }}</h1>
           </v-layout>
           <v-layout justify-center row>
-            <v-btn @click="down" flat icon :color="isDown ? 'orange' : ''">
+            <v-btn @click="down" flat icon :color="isDown&&isLogin ? 'orange' : ''">
               <v-icon>thumb_down</v-icon>
             </v-btn>
           </v-layout>
@@ -60,6 +60,7 @@ export default {
   computed: {
     ...mapState([
       'user',
+      'isLogin',
     ]),
     totalVotes() {
       if (!this.question) {
@@ -95,38 +96,38 @@ export default {
   },
   watch: {
     isUp() {
-      if (this.isUp) {
+      if (this.isUp && this.user) {
         if (!this.question.upvotes.find(id => id === this.user.id)) {
           this.question.upvotes.push(this.user.id);
         }
       } else {
         this.question.upvotes = this.question.upvotes.filter(id => id !== this.user.id);
       }
-      // this.updateVote();
-      // console.log('dari isUp');
     },
     isDown() {
-      if (this.isDown) {
+      if (this.isDown && this.user) {
         if (!this.question.downvotes.find(id => id === this.user.id)) {
           this.question.downvotes.push(this.user.id);
-          this.updateVote();
         }
       } else {
         this.question.downvotes = this.question.downvotes.filter(id => id !== this.user.id);
-        this.updateVote();
       }
-      // console.log('dari isDown');
     },
     // eslint-disable-next-line
     'question._id'() {
-      if (this.question) {
+      if (this.question && this.user) {
+        this.checkVote();
+      }
+    },
+    isLogin() {
+      if (this.question && this.user) {
         this.checkVote();
       }
     },
   },
   mounted() {
     this.fetchQuestion();
-    if (this.question) {
+    if (this.question && this.user) {
       this.checkVote();
     }
   },
@@ -153,6 +154,7 @@ export default {
       } else {
         this.isUp = false;
       }
+      this.upvote();
     },
     down() {
       if (!this.isDown) {
@@ -161,34 +163,65 @@ export default {
       } else {
         this.isDown = false;
       }
+      this.downvote();
     },
-    updateVote() {
+    upvote() {
       const { id } = this.$route.params;
       const { token } = localStorage;
-      axios
-        // eslint-disable-next-line
-        .patch(`/questions/${id}`, {
-          upvotes: this.question.upvotes,
-          downvotes: this.question.downvotes,
-        }, {
-          headers: { token },
-        })
-        .then(({ data }) => {
-          const { updatedQuestion } = data;
 
-          this.question = updatedQuestion;
+      axios
+        .patch(`/questions/${id}?upvote=${Number(this.isUp)}`, {}, { headers: { token } })
+        // eslint-disable-next-line
+        .then(({ data }) => {
+          // eslint-disable-next-line
+          //...
         })
         .catch((err) => {
-          const { message } = err.response.data;
-
+          let message = null;
+          if (err.response) {
+          // eslint-disable-next-line
+            message = err.response.data.message;
+          } else {
+            message = 'internal server error';
+          }
+          message += ', login first';
           this.$store.dispatch('notify', {
-            message, type: 'error',
+            message,
+            type: 'error',
           });
-          this.isUp = false;
+          this.isUp = !this.isUp;
+        });
+    },
+    downvote() {
+      const { id } = this.$route.params;
+      const { token } = localStorage;
+
+      axios
+        .patch(`/questions/${id}?downvote=${Number(this.isDown)}`, {}, { headers: { token } })
+        // eslint-disable-next-line
+        .then(({ data }) => {
+          // eslint-disable-next-line
+          //...
+        })
+        .catch((err) => {
+          let message = null;
+          if (err.response) {
+          // eslint-disable-next-line
+            message = err.response.data.message;
+          } else {
+            message = 'internal server error';
+          }
+          message += ', login first';
+          this.$store.dispatch('notify', {
+            message,
+            type: 'error',
+          });
+          this.isDown = !this.isDown;
         });
     },
     fetchQuestion() {
       const { id } = this.$route.params;
+
       axios
         // eslint-disable-next-line
         .get(`/questions/${id}`)

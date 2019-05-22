@@ -166,6 +166,8 @@ class Controller {
 
     question.upvotes = (upvote == 1 && !question.upvotes.find(id => id == decoded.id)) ? [...question.upvotes, decoded.id] : upvote == 0 ? question.upvotes.filter(id => id != decoded.id) : question.upvotes;
     question.downvotes = (downvote == 1 && !question.downvotes.find(id => id == decoded.id)) ? [...question.downvotes, decoded.id] : downvote == 0 ? question.downvotes.filter(id => id != decoded.id) : question.downvotes;
+    question.upvotes = downvote == 1 ? question.upvotes.filter(id => id != decoded.id) : question.upvotes;
+    question.downvotes = upvote == 1 ? question.downvotes.filter(id => id != decoded.id) : question.downvotes;
     question.title = title || question.title;
     question.description = description || question.description;
     question.tags = tags.length ? tags : question.tags;
