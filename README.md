@@ -16,7 +16,7 @@ $ npm run dev
 Make sure you have set all required your .env parameters
 <br>(key reference: .env.example)
 
-Access the REST API via SERVER_URL = `http://localhost:3000`
+Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
 
 ## REST API Routes:
 
@@ -73,6 +73,33 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
         "message": "invalid username / password"
       }
       ```
+
+- **Decode Token**
+  - URL:
+    - **`GET`** *`<SERVER_URL>/user/decode`*
+  - Header(s):
+    - `token`: `String`
+  - Expected response (status: `200`):
+    ```json
+      {
+        "_id": "<id>",
+        "name": "<name>",
+        "email": "<email>",
+        "iat": "<timeEncoded>"
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+      {
+        "message": "<authentication message>"
+      }
+      ```
+      Notes:
+      - Messages:
+        - no token assigned
+        - not allowed to access
+        - not recognized input data
 
 ### QUESTIONS
 
@@ -421,7 +448,55 @@ Access the REST API via SERVER_URL = `http://localhost:3000`
     ```json
       {
         "message": "data found",
-        "questions": [
+        "answers": [
+          {
+            "_id": "<id>",
+            "title": "<title>",
+            "description": "<description>",
+            "created": "<createdAt>",
+            "updated": "<updatedAt>",
+            "upvotes": "[<userObjectId>]",
+            "downvotes": "[<userObjectId>]",
+            "questionId": "<questionObjectId-populated>",
+            "creator": "<userObjectId-populated>"
+          },
+          {
+            "..."
+          }, 
+          "..."
+        ]
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+        {
+          "message": "<authentication message>"
+        }
+      ```
+      Notes:
+      <br>Messages:
+      - no token assigned
+      - not allowed to access
+      - not recognized input data
+
+    - status: `404`:
+      ```json
+        {
+          "message": "data empty"
+        }
+      ```
+
+- **GET LIST OF A QUESTION'S ANSWERS BY QUESTION ID**
+  - URL:
+    - **`GET`** *`<SERVER_URL>/questions/:id/answers`*
+  - URL (filtered):
+    - **`GET`** *`<SERVER_URL>/user/answers?search=<KEYWORD>`*
+  - Expected response (status: `200`):
+    ```json
+      {
+        "message": "data found",
+        "answers": [
           {
             "_id": "<id>",
             "title": "<title>",
