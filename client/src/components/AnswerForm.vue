@@ -26,6 +26,7 @@
 <script>
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { mapState } from 'vuex';
+
 export default {
   name: 'answerForm',
   components: {
@@ -63,7 +64,7 @@ export default {
         this.$store.dispatch('notify', {
           message: 'you must login first to answer the question',
           type: 'warning',
-        })
+        });
       } else {
         const { title, description } = this.answerForm;
         const { id } = this.$route.params;
