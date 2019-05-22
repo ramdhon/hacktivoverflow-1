@@ -37,6 +37,14 @@
         </v-flex>
         <v-flex class="pa-2" sm11>
           <span v-html="question.description"></span>
+          <v-layout row wrap>
+            <v-chip small label color="orange" text-color="white">
+              <v-icon left>label</v-icon>Tags
+            </v-chip>
+            <v-chip small v-for="(tag, index) in question.tags" :key="index">
+              {{ tag.title }}
+            </v-chip>
+          </v-layout>
         </v-flex>
       </v-layout>
     </v-card-text>
@@ -53,9 +61,6 @@ export default {
     ...mapState([
       'user',
     ]),
-    totalAnswers() {
-      return this.answers.length;
-    },
     totalVotes() {
       if (!this.question) {
         return 0;
@@ -121,14 +126,12 @@ export default {
   },
   mounted() {
     this.fetchQuestion();
-    this.fetchAnswers();
     if (this.question) {
       this.checkVote();
     }
   },
   data() {
     return {
-      answers: [],
       question: null,
       isUp: false,
       isDown: false,
@@ -184,30 +187,6 @@ export default {
           this.isUp = false;
         });
     },
-    fetchAnswers() {
-      const { id } = this.$route.params;
-      axios
-        // eslint-disable-next-line
-        .get(`/questions/${id}/answers`)
-        .then(({ data }) => {
-          const { answers } = data;
-
-          this.answers = answers;
-        })
-        .catch((err) => {
-          const { status } = err.response;
-
-          if (status === 404) {
-            this.answers = [];
-          } else {
-            const { message } = err.response.data;
-
-            this.$store.dispatch('notify', {
-              message, type: 'error',
-            });
-          }
-        });
-    },
     fetchQuestion() {
       const { id } = this.$route.params;
       axios
@@ -217,6 +196,7 @@ export default {
           const { question } = data;
 
           this.question = question;
+          this.$emit('listen', question);
         })
         .catch((err) => {
           const { status } = err.response;

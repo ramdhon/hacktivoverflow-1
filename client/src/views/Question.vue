@@ -2,7 +2,10 @@
   <v-container class="pt-5">
     <v-layout row>
       <v-flex class="pa-4" sm9>
-        <QuestionCard/>
+        <QuestionCard @listen="listenQuestion"/>
+        <v-flex v-if="question">
+          <AnswerForm @upload="upload"/>
+        </v-flex>
       </v-flex>
       <v-flex class="pa-4" sm3>
         <WatchedTags v-show="isLogin"/>
@@ -14,6 +17,8 @@
 <script>
 import WatchedTags from '@/components/WatchedTags.vue';
 import QuestionCard from '@/components/QuestionCard.vue';
+import AnswerForm from '@/components/AnswerForm.vue';
+import axios from '@/api/server';
 import { mapState } from 'vuex';
 
 export default {
@@ -21,19 +26,72 @@ export default {
   components: {
     WatchedTags,
     QuestionCard,
+    AnswerForm,
   },
   computed: {
     ...mapState([
       'isLogin',
     ]),
   },
-  created() {
-  },
   data() {
     return {
+      question: null,
+      answers: [],
     };
   },
   methods: {
+    listenQuestion(question) {
+      this.question = question;
+    },
+    upload(formData) {
+      const { token } = localStorage;
+
+      this.$store.commit('loading', true);
+      axios
+        .post('/answers', formData, { headers: { token } })
+        .then(({ data }) => {
+          this.$store.commit('loading', false);
+          const { message, newAnswer } = data;
+
+          this.dispatch('notify', {
+            message, type: 'success',
+          });
+          this.answers.unshift(newAnswer);
+        })
+        .catch((err) => {
+          this.$store.commit('loading', false);
+          const { message } = err.response.data;
+
+          this.dispatch('notify', {
+            message, type: 'error',
+          });
+        });
+    },
+    fetchAnswers() {
+      const { id } = this.$route.params;
+
+      axios
+        // eslint-disable-next-line
+        .get(`/questions/${id}/answers`)
+        .then(({ data }) => {
+          const { answers } = data;
+
+          this.answers = answers;
+        })
+        .catch((err) => {
+          const { status } = err.response;
+
+          if (status === 404) {
+            this.answers = [];
+          } else {
+            const { message } = err.response.data;
+
+            this.$store.dispatch('notify', {
+              message, type: 'error',
+            });
+          }
+        });
+    },
   },
 };
 </script>
