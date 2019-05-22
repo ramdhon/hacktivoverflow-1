@@ -5,6 +5,12 @@
         <QuestionCard @listen="listenQuestion"/>
         <v-flex v-if="question">
           <AnswerForm @upload="upload"/>
+          <h1 class="display-1">{{ totalAnswers }} answer{{ totalAnswers > 1 ? 's' : '' }}</h1>
+          <v-divider></v-divider>
+          <AnswerCard
+            v-for="(answer, index) in answers"
+            :key="index"
+          />
         </v-flex>
       </v-flex>
       <v-flex class="pa-4" sm3>
@@ -17,6 +23,7 @@
 <script>
 import WatchedTags from '@/components/WatchedTags.vue';
 import QuestionCard from '@/components/QuestionCard.vue';
+import AnswerCard from '@/components/AnswerCard.vue';
 import AnswerForm from '@/components/AnswerForm.vue';
 import axios from '@/api/server';
 import { mapState } from 'vuex';
@@ -26,12 +33,19 @@ export default {
   components: {
     WatchedTags,
     QuestionCard,
+    AnswerCard,
     AnswerForm,
   },
   computed: {
     ...mapState([
       'isLogin',
     ]),
+    totalAnswers() {
+      if (!this.answers) {
+        return 0;
+      }
+      return this.answers.length;
+    },
   },
   data() {
     return {
