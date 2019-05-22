@@ -59,6 +59,10 @@ export default new Vuex.Store({
       // eslint-disable-next-line
       state.isLogin = payload;
     },
+    setUserDetail(state, payload) {
+      // eslint-disable-next-line
+      state.user = payload;      
+    },
     setQuestions(state, payload) {
       // eslint-disable-next-line
       state.questions = payload;      
@@ -78,6 +82,22 @@ export default new Vuex.Store({
         payload.status = false;
         context.commit('notify', payload);
       }, 3000);
+    },
+    decodeToken(context, payload) {
+      axios
+        .get('/user/decode', { headers: { token: payload } })
+        .then(({ data }) => {
+          const { decoded } = data;
+
+          context.commit('setUserDetail', decoded);
+        })
+        .catch((err) => {
+          const { message } = err.response.data;
+
+          this.dispatch('notify', {
+            message, type: 'error',
+          });
+        });
     },
     login(context, payload) {
       context.commit('loading', true);

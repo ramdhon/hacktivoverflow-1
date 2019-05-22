@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-list-tile @click="test" ripple>
+    <v-list-tile @click="goToQuestion" ripple>
         <v-layout row>
           <v-flex sm2>
             <v-layout row>
               <v-flex sm6>
                 <v-layout row justify-center>
                   <h1 class="display-1 grey--text">
-                    0
+                    {{ totalVotes }}
                   </h1>
                 </v-layout>
                 <v-layout row justify-center>
@@ -61,7 +61,7 @@ export default {
       return this.answers.length;
     },
     totalVotes() {
-      return this.upvotes.length - this.downvotes.length;
+      return this.question.upvotes.length - this.question.downvotes.length;
     },
     diffTime() {
       return (new Date()) - (new Date(this.question.created));
@@ -123,8 +123,9 @@ export default {
           }
         });
     },
-    test() {
-
+    goToQuestion() {
+      // eslint-disable-next-line
+      this.$router.push(`/questions/${this.question._id}`);
     },
   },
 };

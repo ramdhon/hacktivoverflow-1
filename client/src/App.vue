@@ -46,6 +46,7 @@ export default {
       if (!localStorage.token) {
         this.$store.commit('setIsLogin', false);
       } else {
+        this.$store.dispatch('decodeToken', localStorage.token);
         this.$store.commit('setIsLogin', true);
       }
     },
