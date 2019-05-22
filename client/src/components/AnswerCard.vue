@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="my-4">
     <v-card-title primary-title>
       <v-layout row>
         <v-flex sm9>
@@ -34,14 +34,6 @@
         </v-flex>
         <v-flex class="pa-2" sm11>
           <span v-html="answer.description"></span>
-          <v-layout row wrap>
-            <v-chip small label color="orange" text-color="white">
-              <v-icon left>label</v-icon>Tags
-            </v-chip>
-            <v-chip small v-for="(tag, index) in answer.tags" :key="index">
-              {{ tag.title }}
-            </v-chip>
-          </v-layout>
         </v-flex>
       </v-layout>
     </v-card-text>

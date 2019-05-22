@@ -10,6 +10,7 @@
           <AnswerCard
             v-for="(answer, index) in answers"
             :key="index"
+            :answer="answer"
           />
         </v-flex>
       </v-flex>
@@ -47,6 +48,9 @@ export default {
       return this.answers.length;
     },
   },
+  mounted() {
+    this.fetchAnswers();
+  },
   data() {
     return {
       question: null,
@@ -67,16 +71,17 @@ export default {
           this.$store.commit('loading', false);
           const { message, newAnswer } = data;
 
-          this.dispatch('notify', {
+          this.$store.dispatch('notify', {
             message, type: 'success',
           });
           this.answers.unshift(newAnswer);
         })
         .catch((err) => {
+          console.log(err);
           this.$store.commit('loading', false);
           const { message } = err.response.data;
 
-          this.dispatch('notify', {
+          this.$store.dispatch('notify', {
             message, type: 'error',
           });
         });

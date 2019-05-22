@@ -84,7 +84,7 @@ class Controller {
     Question.create({
       title, description,
       creator: decoded.id,
-      tags: tags || [],
+      tags: tags,
       upvotes: [],
       downvotes: [],
       created: new Date(),
