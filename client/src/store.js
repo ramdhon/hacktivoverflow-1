@@ -14,17 +14,8 @@ export default new Vuex.Store({
     },
     search: '',
     isLogin: false,
-    questions: [
-      {
-        title: 'Apa lorem ipsum',
-      },
-      {
-        title: 'Bagaimana lorem ipsum',
-      },
-      {
-        title: 'Kapan lorem ipsum',
-      },
-    ],
+    questions: [],
+    myQuestions: [],
   },
   mutations: {
     notify(state, payload) {
@@ -59,9 +50,22 @@ export default new Vuex.Store({
       state.isLogin = true;
       localStorage.setItem('token', token);
     },
+    addQuestion(state, payload) {
+      // eslint-disable-next-line
+      state.questions.unshift(payload);
+      state.myQuestions.unshift(payload);
+    },
     setIsLogin(state, payload) {
       // eslint-disable-next-line
       state.isLogin = payload;
+    },
+    setQuestions(state, payload) {
+      // eslint-disable-next-line
+      state.questions = payload;      
+    },
+    setMyQuestions(state, payload) {
+      // eslint-disable-next-line
+      state.myQuestions = payload;      
     },
   },
   actions: {
@@ -121,11 +125,12 @@ export default new Vuex.Store({
         .post('/questions', formData, { headers: { token } })
         .then(({ data }) => {
           context.commit('loading', false);
-          const { message } = data;
+          const { message, newQuestion } = data;
 
           this.dispatch('notify', {
             message, type: 'success',
           });
+          context.commit('addQuestion', newQuestion);
         })
         .catch((err) => {
           context.commit('loading', false);
@@ -134,6 +139,56 @@ export default new Vuex.Store({
           this.dispatch('notify', {
             message, type: 'error',
           });
+        });
+    },
+    fetchQuestions(context) {
+      context.commit('loading', true);
+      axios
+        .get('/questions')
+        .then(({ data }) => {
+          context.commit('loading', false);
+          const { questions } = data;
+
+          context.commit('setQuestions', questions);
+        })
+        .catch((err) => {
+          context.commit('loading', false);
+          const { status } = err.response;
+
+          if (status === 404) {
+            context.commit('setQuestions', []);
+          } else {
+            const { message } = err.response.data;
+
+            this.dispatch('notify', {
+              message, type: 'error',
+            });
+          }
+        });
+    },
+    fetchMyQuestions(context, payload) {
+      context.commit('loading', true);
+      axios
+        .get('/user/questions', { headers: { token: payload } })
+        .then(({ data }) => {
+          context.commit('loading', false);
+          const { questions } = data;
+
+          context.commit('setMyQuestions', questions);
+        })
+        .catch((err) => {
+          context.commit('loading', false);
+          const { status } = err.response;
+
+          if (status === 404) {
+            context.commit('setMyQuestions', []);
+          } else {
+            const { message } = err.response.data;
+
+            this.dispatch('notify', {
+              message, type: 'error',
+            });
+          }
         });
     },
   },

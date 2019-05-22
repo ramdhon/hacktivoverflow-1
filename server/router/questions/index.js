@@ -9,6 +9,7 @@ const tagsHandler = require('../../middlewares/tagsHandler');
 
 router.get('/', QuestionController.findAll);
 router.get('/:id', QuestionController.findOne);
+router.get('/:id/answers', AnswerController.findAllToQuestioned);
 
 router.use(Authenticate);
 router.post('/', tagsHandler.generate, QuestionController.create);
@@ -17,8 +18,6 @@ router.use('/:id', AuthorizeAuthUser);
 router.put('/:id', tagsHandler.generate, QuestionController.updatePut);
 router.patch('/:id', tagsHandler.generate, QuestionController.updatePatch);
 router.delete('/:id', QuestionController.delete);
-
-router.delete('/:id/answers', AnswerController.findAllToQuestioned);
 
 
 module.exports = router;

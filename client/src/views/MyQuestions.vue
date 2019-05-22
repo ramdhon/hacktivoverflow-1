@@ -19,14 +19,14 @@
             <v-icon>create</v-icon>&ensp;Question?
           </v-btn>
         </v-layout>
-        <v-layout v-if="questions.length === 0" justify-center row>
+        <v-layout v-if="myQuestions.length === 0" justify-center row>
           <span class="title grey--text">There is no question yet.</span>
         </v-layout>
         <v-layout row>
           <v-flex>
             <v-list three-line>
               <QuestionList
-                v-for="(question, index) in questions"
+                v-for="(question, index) in myQuestions"
                 :key="index"
                 :question="question"
               />
@@ -48,20 +48,25 @@ import QuestionList from '@/components/QuestionList.vue';
 import { mapState } from 'vuex';
 
 export default {
-  name: 'home',
+  name: 'myQuestions',
   components: {
     QuestionForm,
     WatchedTags,
     QuestionList,
   },
+  watch: {
+    isLogin() {
+      this.checkLog();
+    },
+  },
   computed: {
     ...mapState([
       'isLogin',
-      'questions',
+      'myQuestions',
     ]),
   },
   created() {
-    this.$store.dispatch('fetchQuestions');
+    this.checkLog();
   },
   data() {
     return {
@@ -69,6 +74,13 @@ export default {
     };
   },
   methods: {
+    checkLog() {
+      if (!this.isLogin) {
+        this.$router.push('/');
+      } else {
+        this.$store.dispatch('fetchMyQuestions', localStorage.token);
+      }
+    },
     openForm() {
       if (!this.isLogin) {
         this.$store.dispatch('notify', { message: 'login first', type: 'warning' });
