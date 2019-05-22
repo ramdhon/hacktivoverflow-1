@@ -197,7 +197,7 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
   - Body:
     - `title`: `String`, required
     - `description`: `String`
-    - `tags`: `String`, splitted by comma
+    - `tags`: `Array`
   - Expected response (status: `201`):
     ```json
       {
@@ -273,7 +273,7 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
   - Body:
     - `title`: `String`, required
     - `description`: `String`
-    - `tags`: `String`, splitted by comma
+    - `tags`: `Array`
   - Expected response (status: `201`):
     ```json
       {
@@ -318,6 +318,48 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
           "message": "data not found"
         }
       ```
+
+- **UPVOTE / DOWNVOTE A QUESTION BY ID**
+  - URL:
+    - **`PATCH`** *`<SERVER_URL>/questions/:id?<query>`*
+  - Header(s):
+    - `token`: `String`
+  - Query:
+    - `upvote`: `1 or 0`,
+    - `downvote`: `1 or 0`,
+    Notes:
+    - `1` for *upvote* or *downvote*
+    - `0` for *undo upvote* or *undo downvote*
+  - Expected response (status: `201`):
+    ```json
+      {
+        "message": "data updated",
+        "updatedQuestion":
+        {
+          "_id": "<id>",
+          "title": "<title>",
+          "description": "<description>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+          "tags": "[<tagObjectId-populated>]",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
+          "creator": "<userObjectId-populated>"
+        },
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+      {
+        "message": "<authentication message>"
+      }
+      ```
+      Notes:
+      - Messages:
+        - no token assigned
+        - not allowed to access
+        - not recognized input data
 
 - **DELETE QUESTION BY ID**
   - Notes:

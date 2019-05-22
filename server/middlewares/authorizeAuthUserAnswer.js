@@ -3,6 +3,7 @@ const Answer = require('../models/answer');
 module.exports = (req, res, next) => {
   const { decoded } = req;
   const { id } = req.params;
+  const { upvote, downvote } = req.query;
 
   Answer.findById(id)
     .populate({
@@ -21,7 +22,7 @@ module.exports = (req, res, next) => {
         }
         next(err);
       } else {
-        if (answer.creator._id != decoded.id) {
+        if ((answer.creator._id != decoded.id) && !(upvote || downvote) || (Object.keys(req.body).length)) {
           const err = {
             status: 401,
             message: 'unauthorized to access'

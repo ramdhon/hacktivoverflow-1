@@ -160,14 +160,15 @@ class Controller {
   }
 
   static updatePatch(req, res, next) {
-    const { title, description, upvotes, downvotes } = req.body;
-    let { tags, question } = req;
+    const { title, description } = req.body;
+    let { tags, question, decoded } = req;
+    const { upvote, downvote } = req.query;
 
+    question.upvotes = (upvote == 1 && !question.upvotes.find(id => id == decoded.id)) ? [...question.upvotes, decoded.id] : upvote == 0 ? question.upvotes.filter(id => id != decoded.id) : question.upvotes;
+    question.downvotes = (downvote == 1 && !question.downvotes.find(id => id == decoded.id)) ? [...question.downvotes, decoded.id] : downvote == 0 ? question.downvotes.filter(id => id != decoded.id) : question.downvotes;
     question.title = title || question.title;
     question.description = description || question.description;
     question.tags = tags.length ? tags : question.tags;
-    question.upvotes = upvotes || question.upvotes;
-    question.downvotes = downvotes || question.downvotes;
     question.updated = new Date();
     question.save()
       .then(updatedQuestion => {
