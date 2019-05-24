@@ -9,7 +9,14 @@
         <span class="grey--text">No tags set.</span>
       </v-layout>
       <v-layout v-if="!openDialog" row wrap>
-        <v-chip small v-for="(tag, index) in watched" :key="index">{{ tag }}</v-chip>
+        <v-chip
+          small
+          v-for="(tag, index) in watched"
+          :key="index"
+          @click="findTag(tag)"
+        >
+          {{ tag }}
+        </v-chip>
       </v-layout>
       <v-form v-else @submit.prevent="updateWatched">
         <v-combobox
@@ -54,9 +61,21 @@
 
 <script>
 import axios from '@/api/server';
+import { mapState } from 'vuex';
 
 export default {
   name: 'watchedTags',
+  watch: {
+    isLogin() {
+      this.fetchTags();
+      this.fetchWatched();
+    },
+  },
+  computed: {
+    ...mapState([
+      'isLogin',
+    ]),
+  },
   mounted() {
     this.fetchTags();
     this.fetchWatched();
@@ -75,6 +94,11 @@ export default {
     remove(item) {
       this.tagForm.tags.splice(this.tagForm.tags.indexOf(item), 1);
       this.tagForm.tags = [...this.tagForm.tags];
+    },
+    findTag(keyword) {
+      this.$router.push('/');
+      this.$store.dispatch('fetchQuestions');
+      this.$store.commit('setSearch', keyword);
     },
     openEdit() {
       this.tagForm.tags = this.watched;
@@ -106,18 +130,9 @@ export default {
 
           this.watched = watched.tags;
         })
+        // eslint-disable-next-line
         .catch((err) => {
-          const { status } = err.response;
-
-          if (status === 404) {
-            this.tagForm.tags = [];
-          } else {
-            const { message } = err.response.data;
-            this.$store.dispatch('notify', {
-              message,
-              type: 'error',
-            });
-          }
+          this.tagForm.tags = [];
         });
     },
     updateWatched() {

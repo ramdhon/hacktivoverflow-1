@@ -1,5 +1,5 @@
 <template>
-  <v-layout v-if="!question" justify-center row>
+  <v-layout v-if="!question && !loading" justify-center row>
     <h1 class="headline grey--text">404 - Not Found.</h1>
   </v-layout>
   <v-card color="grey lighten-3" v-else>
@@ -38,12 +38,26 @@
         <v-flex class="pa-2" sm11>
           <span v-html="question.description"></span>
           <v-layout row wrap>
-            <v-chip small label color="orange" text-color="white">
-              <v-icon left>label</v-icon>Tags
-            </v-chip>
-            <v-chip small v-for="(tag, index) in question.tags" :key="index">
-              {{ tag.title }}
-            </v-chip>
+            <v-flex>
+              <v-chip small label color="orange" text-color="white">
+                <v-icon left>label</v-icon>Tags
+              </v-chip>
+              <v-chip small
+                @click="findTag(tag.title)"
+                v-for="(tag, index) in question.tags"
+                :key="index"
+              >
+                {{ tag.title }}
+              </v-chip>
+            </v-flex>
+            <v-flex v-if="(question.creator._id || false) === user.id" sm2>
+              <v-btn flat icon>
+                <v-icon>create</v-icon>
+              </v-btn>
+              <v-btn @click="removeQuestion" flat icon color="red">
+                <v-icon>delete</v-icon>
+              </v-btn>
+            </v-flex>
           </v-layout>
         </v-flex>
       </v-layout>
@@ -61,6 +75,7 @@ export default {
     ...mapState([
       'user',
       'isLogin',
+      'loading',
     ]),
     totalVotes() {
       if (!this.question) {
@@ -133,12 +148,24 @@ export default {
   },
   data() {
     return {
-      question: null,
+      question: {
+        title: '',
+        description: '',
+        creator: {},
+        tags: [],
+        upvotes: [],
+        downvotes: [],
+      },
       isUp: false,
       isDown: false,
     };
   },
   methods: {
+    findTag(keyword) {
+      this.$router.push('/');
+      this.$store.dispatch('fetchQuestions');
+      this.$store.commit('setSearch', keyword);
+    },
     checkVote() {
       if (this.question.upvotes.find(id => id === this.user.id)) {
         this.isUp = true;
@@ -217,6 +244,33 @@ export default {
             type: 'error',
           });
           this.isDown = !this.isDown;
+        });
+    },
+    removeQuestion() {
+      const { id } = this.$route.params;
+      const { token } = localStorage;
+
+      this.$store.commit('loading', true);
+      axios
+        // eslint-disable-next-line
+        .delete(`/questions/${id}`, { headers: { token } })
+        .then(({ data }) => {
+          this.$store.commit('loading', false);
+          const { message } = data;
+
+          this.$store.dispatch('notify', {
+            message,
+            type: 'success',
+          });
+          this.$router.push('/user/questions');
+        })
+        .catch((err) => {
+          this.$store.commit('loading', false);
+          const { message } = err.response.data;
+
+          this.$store.dispatch('notify', {
+            message, type: 'error',
+          });
         });
     },
     fetchQuestion() {

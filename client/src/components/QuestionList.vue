@@ -32,7 +32,9 @@
               <v-chip small label color="orange" text-color="white">
                 <v-icon left>label</v-icon>Tags
               </v-chip>
-              <v-chip small v-for="(tag, index) in question.tags" :key="index">
+              <v-chip small
+                v-for="(tag, index) in question.tags"
+                :key="index">
                 {{ tag.title }}
               </v-chip>
             </v-layout>

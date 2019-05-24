@@ -19,7 +19,7 @@
             <v-icon>create</v-icon>&ensp;Question?
           </v-btn>
         </v-layout>
-        <v-layout v-if="questions.length === 0" justify-center row>
+        <v-layout v-if="questions.length === 0 && !loading" justify-center row>
           <span class="title grey--text">There is no question yet.</span>
         </v-layout>
         <v-layout row>
@@ -58,6 +58,7 @@ export default {
     ...mapState([
       'isLogin',
       'questions',
+      'loading',
     ]),
   },
   created() {

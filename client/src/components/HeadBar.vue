@@ -10,6 +10,7 @@
     <router-link to="/">
       <v-toolbar-title
         class="orange--text"
+        @click="home"
       >
         <v-icon color="orange">question_answer</v-icon>&ensp;hO.
       </v-toolbar-title>
@@ -78,7 +79,10 @@ export default {
     RegisterForm,
   },
   watch: {
-    search() {
+    search(val) {
+      this.$router.push('/');
+      this.$store.dispatch('fetchQuestions');
+      this.$store.commit('setSearch', val);
     },
   },
   computed: {
@@ -100,6 +104,10 @@ export default {
     ...mapMutations([
       'logout',
     ]),
+    home() {
+      this.$store.dispatch('fetchQuestions');
+      this.$store.commit('setSearch', '');
+    },
   },
 };
 </script>

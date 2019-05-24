@@ -40,6 +40,7 @@ export default {
   computed: {
     ...mapState([
       'isLogin',
+
     ]),
     totalAnswers() {
       if (!this.answers) {

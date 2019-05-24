@@ -16,6 +16,7 @@ export default new Vuex.Store({
     isLogin: false,
     questions: [],
     myQuestions: [],
+    user: {},
   },
   mutations: {
     notify(state, payload) {
@@ -61,15 +62,29 @@ export default new Vuex.Store({
     },
     setUserDetail(state, payload) {
       // eslint-disable-next-line
-      state.user = payload;      
+      state.user = payload;
     },
     setQuestions(state, payload) {
-      // eslint-disable-next-line
-      state.questions = payload;      
+      if (!state.search) {
+        // eslint-disable-next-line
+        state.questions = payload;
+      } else {
+        // eslint-disable-next-line
+        state.questions = payload.filter(question => {
+          // eslint-disable-next-line
+          const founds = question.tags.filter(tag => tag.title.toLowerCase().match(state.search.toLowerCase()));
+          // eslint-disable-next-line
+          return question.title.toLowerCase().match(state.search.toLowerCase()) || founds.length;
+        });
+      }
     },
     setMyQuestions(state, payload) {
       // eslint-disable-next-line
-      state.myQuestions = payload;      
+      state.myQuestions = payload;
+    },
+    setSearch(state, payload) {
+      // eslint-disable-next-line
+      state.search = payload;
     },
   },
   actions: {
@@ -92,11 +107,17 @@ export default new Vuex.Store({
           context.commit('setUserDetail', decoded);
         })
         .catch((err) => {
-          const { message } = err.response.data;
+          const { status } = err.response;
 
-          this.dispatch('notify', {
-            message, type: 'error',
-          });
+          if (status === 400) {
+            context.commit('setUserDetail', {});
+          } else {
+            const { message } = err.response.data;
+
+            this.dispatch('notify', {
+              message, type: 'error',
+            });
+          }
         });
     },
     login(context, payload) {

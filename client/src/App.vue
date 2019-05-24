@@ -42,6 +42,9 @@ export default {
     this.checkLog();
   },
   methods: {
+    search(keyword) {
+      this.search = keyword;
+    },
     checkLog() {
       if (!localStorage.token) {
         this.$store.commit('setIsLogin', false);
