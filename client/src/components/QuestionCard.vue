@@ -50,7 +50,7 @@
                 {{ tag.title }}
               </v-chip>
             </v-flex>
-            <v-flex v-if="(question.creator._id || false) === user.id" sm2>
+            <v-flex v-if="question.creator._id === user.id" sm2>
               <v-btn flat icon>
                 <v-icon>create</v-icon>
               </v-btn>
