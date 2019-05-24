@@ -8,6 +8,7 @@ const user = require('./user');
 const questions = require('./questions');
 const answers = require('./answers');
 const tags = require('./tags');
+const watched = require('./watched');
 
 router.get('/', (req, res, next) => {
   res.status(200).json({ message: 'Welcome to Hackoverflow API :)' })
@@ -23,5 +24,6 @@ router.use('/answers', answers);
 
 router.use('/tags', tags);
 
+router.use('/watched', watched);
 
 module.exports = router;

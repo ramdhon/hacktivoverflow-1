@@ -44,7 +44,8 @@ class Controller {
       name, email, password
     })
       .then(newUser => {
-        res.status(201).json({ message: 'account registered', newUser });
+        req.newUser = newUser;
+        next();
       })
       .catch(err => {
         next(err);

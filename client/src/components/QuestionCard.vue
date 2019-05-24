@@ -222,16 +222,19 @@ export default {
     fetchQuestion() {
       const { id } = this.$route.params;
 
+      this.$store.commit('loading', true);
       axios
         // eslint-disable-next-line
         .get(`/questions/${id}`)
         .then(({ data }) => {
+          this.$store.commit('loading', false);
           const { question } = data;
 
           this.question = question;
           this.$emit('listen', question);
         })
         .catch((err) => {
+          this.$store.commit('loading', false);
           const { status } = err.response;
 
           if (status === 404) {
