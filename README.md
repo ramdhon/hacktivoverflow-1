@@ -20,6 +20,16 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
 
 ## REST API Routes:
 
+### WELCOME
+- URL:
+  - **`POST`** *`<SERVER_URL>/register`*
+- Expected response (status: `201`):
+  ```json
+    {
+      "message": "Welcome to Hackoverflow API :)"
+    }
+  ```
+
 ### AUTHENTICATION
 
 - **Register**
