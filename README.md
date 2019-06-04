@@ -345,7 +345,7 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
           "upvotes": "[<userObjectId>]",
           "downvotes": "[<userObjectId>]",
           "creator": "<userObjectId-populated>"
-        },
+        }
       }
     ```
   - Error responses:
@@ -707,6 +707,48 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
         }
       ```
 
+- **UPVOTE / DOWNVOTE AN ANSWER BY ID**
+  - URL:
+    - **`PATCH`** *`<SERVER_URL>/answers/:id?<query>`*
+  - Header(s):
+    - `token`: `String`
+  - Query:
+    - `upvote`: `1 or 0`,
+    - `downvote`: `1 or 0`,
+    Notes:
+    - `1` for *upvote* or *downvote*
+    - `0` for *undo upvote* or *undo downvote*
+  - Expected response (status: `201`):
+    ```json
+      {
+        "message": "data updated",
+        "updatedAnswer":
+        {
+          "_id": "<id>",
+          "title": "<title>",
+          "description": "<description>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+          "upvotes": "[<userObjectId>]",
+          "downvotes": "[<userObjectId>]",
+          "questionId": "<questionObjectId-populated>",
+          "creator": "<userObjectId-populated>"
+        }
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+      {
+        "message": "<authentication message>"
+      }
+      ```
+      Notes:
+      - Messages:
+        - no token assigned
+        - not allowed to access
+        - not recognized input data
+
 - **DELETE ANSWER BY ID**
   - Notes:
     - Authorization: only authenticated user's article can be accessed
@@ -756,3 +798,151 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
           "message": "data not found"
         }
       ```
+
+### WATCHED TAGS
+
+- **GET ALL USER WITH WATCH TAGS**
+  - URL:
+    - **`GET`** *`<SERVER_URL>/watched`*
+  - Expected response (status: `200`):
+    ```json
+      {
+        "message": "data found",
+        "watched": [
+          {
+            "_id": "<id>",
+            "tags": [
+              "...",
+              "...",
+            ],
+            "creator": "<userObjectId-populated>",
+            "created": "<createdAt>",
+            "updated": "<updatedAt>",
+          },
+          {
+            "..."
+          }, 
+          "..."
+        ]
+      }
+    ```
+  - Error responses:
+    - status: `404`:
+      ```json
+        {
+          "message": "data empty"
+        }
+      ```
+
+- **CREATE AUTHENTICATED USER WATCH TAGS MANUALLY**
+  - Notes:
+    - It is unique created
+  - URL:
+    - **`POST`** *`<SERVER_URL>/watched`*
+  - Header(s):
+    - `token`: `String`
+  - Expected response (status: `201`):
+    ```json
+      {
+        "message": "account registered",
+        "newWatched": {
+          "_id": "<id>",
+          "tags": [
+            "...",
+            "...",
+          ],
+          "creator": "<userObjectId-populated>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+        }
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+        {
+          "message": "<detailedErrors>"
+        }
+      ```
+      Notes:
+      <br>Messages:
+      - no token assigned
+      - not allowed to access
+      - not recognized input data
+      - ERROR `400` is also Validation Error caused by entering *duplicated creator*
+
+- **GET AUTHENTICATED USER WATCH TAGS**
+  - URL:
+    - **`GET`** *`<SERVER_URL>/user/watched`*
+  - Header(s):
+    - `token`: `String`
+  - Expected response (status: `200`):
+    ```json
+      {
+        "message": "data found",
+        "watched": {
+          "_id": "<id>",
+          "tags": [
+            "...",
+            "...",
+          ],
+          "creator": "<userObjectId-populated>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+        }
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+        {
+          "message": "<authentication message>"
+        }
+      ```
+      Notes:
+      <br>Messages:
+      - no token assigned
+      - not allowed to access
+      - not recognized input data
+
+    - status: `404`:
+      ```json
+        {
+          "message": "data not found"
+        }
+      ```
+
+- **UPDATE AUTHENTICATED USER WATCH TAGS**
+  - URL:
+    - **`PATCH`** *`<SERVER_URL>/user/watched`*
+  - Header(s):
+    - `token`: `String`
+  - Expected response (status: `201`):
+    ```json
+      {
+        "message": "data updated",
+        "updatedWatched": {
+          "_id": "<id>",
+          "tags": [
+            "...",
+            "...",
+          ],
+          "creator": "<userObjectId-populated>",
+          "created": "<createdAt>",
+          "updated": "<updatedAt>",
+        },
+        "info": "..."
+      }
+    ```
+  - Error responses:
+    - status: `400`:
+      ```json
+        {
+          "message": "<authentication message>"
+        }
+      ```
+      Notes:
+      <br>Messages:
+      - no token assigned
+      - not allowed to access
+      - not recognized input data
