@@ -801,7 +801,7 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
 
 ### WATCHED TAGS
 
-- **GET ALL USER WITH WATCH TAGS**
+- **GET ALL USER WITH WATCHED TAGS**
   - URL:
     - **`GET`** *`<SERVER_URL>/watched`*
   - Expected response (status: `200`):
@@ -834,7 +834,7 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
         }
       ```
 
-- **CREATE AUTHENTICATED USER WATCH TAGS MANUALLY**
+- **CREATE AUTHENTICATED USER WATCHED TAGS MANUALLY**
   - Notes:
     - It is unique created
   - URL:
@@ -871,7 +871,7 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
       - not recognized input data
       - ERROR `400` is also Validation Error caused by entering *duplicated creator*
 
-- **GET AUTHENTICATED USER WATCH TAGS**
+- **GET AUTHENTICATED USER WATCHED TAGS**
   - URL:
     - **`GET`** *`<SERVER_URL>/user/watched`*
   - Header(s):
@@ -912,7 +912,7 @@ Access the REST API via SERVER_URL = `http://api.hackoverflow.ramdhon.net`
         }
       ```
 
-- **UPDATE AUTHENTICATED USER WATCH TAGS**
+- **UPDATE AUTHENTICATED USER WATCHED TAGS**
   - URL:
     - **`PATCH`** *`<SERVER_URL>/user/watched`*
   - Header(s):
