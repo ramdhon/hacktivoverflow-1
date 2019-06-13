@@ -100,7 +100,9 @@ export default {
       this.questionForm.tags = [...this.questionForm.tags];
     },
     resetForm() {
-      this.$refs.questionForm.reset();
+      this.$refs.questionForm.reset(
+        
+      );
       this.questionForm.description = '';
     },
     upload() {
