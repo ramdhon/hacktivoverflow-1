@@ -2,6 +2,8 @@
 
 hackoverflow is a simple built forum discussion such as Stack Overflow. This project contains client and server folder, which each has its own documentation to follow.
 
+Deployed link: http://hackoverflow.ramdhon.net
+
 ## client
 Powered by Vuejs for client framework, Vuex for state management, Vuetify for styling framework.
 
